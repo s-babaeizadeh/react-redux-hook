@@ -1,25 +1,58 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect } from "react"
+import { useSelector, useDispatch } from "react-redux"
+import allActions from "./actions"
 
-function App() {
+import "./App.css"
+
+const App = () => {
+  const counter = useSelector((state) => state.counter)
+  const currentUser = useSelector((state) => state.currentUser)
+
+  const dispatch = useDispatch()
+  const user = { name: "User" }
+
+  useEffect(() => {
+    dispatch(allActions.userActions.setUser(user))
+  }, [])
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      {currentUser.loggedIn ? (
+        <>
+          <h1>Hello, {currentUser.user.name}</h1>
+          <button
+            className="button"
+            onClick={() => dispatch(allActions.userActions.logout())}
+          >
+            Logout
+          </button>
+        </>
+      ) : (
+        <>
+          <h1>Login</h1>
+          <button
+            className="button"
+            onClick={() => dispatch(allActions.userActions.setUser(user))}
+          >
+            Login as User
+          </button>
+        </>
+      )}
+      <h1>Counter: {counter}</h1>
+      <button
+        className="button-increment"
+        onClick={() => dispatch(allActions.counterActions.increment())}
+      >
+        Increase Counter
+      </button>
+      <button
+        className="button-decrement"
+        onClick={() => dispatch(allActions.counterActions.decrement())}
+      >
+        Decrease Counter
+      </button>
     </div>
-  );
+  )
 }
 
-export default App;
+export default App
